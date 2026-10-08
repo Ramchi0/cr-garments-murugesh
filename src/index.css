@@ -3,13 +3,17 @@
 :root {
   --bg-deep: #0d1010;
   --bg-mid: #141818;
+  --bg-soft: #1a1d1d;
   --panel: #171a19;
   --panel-strong: #111313;
   --panel-soft: rgba(255, 255, 255, 0.06);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --line-soft: rgba(255, 255, 255, 0.08);
   --gold: #b99a5e;
   --gold-strong: #d7c08d;
   --gold-ghost: rgba(185, 154, 94, 0.16);
   --text: #f5f3ee;
+  --text-strong: #ffffff;
   --text-muted: #a7aaa7;
   --shadow-soft: rgba(0, 0, 0, 0.26);
   --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
@@ -24,6 +28,37 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body[data-theme='light'] {
+  --bg-deep: #f4efe7;
+  --bg-mid: #e6dcc8;
+  --bg-soft: #faf6f0;
+  --panel: #fffdf9;
+  --panel-strong: #f5efe6;
+  --panel-soft: rgba(42, 35, 25, 0.04);
+  --card-border: rgba(86, 72, 46, 0.14);
+  --line-soft: rgba(86, 72, 46, 0.12);
+  --gold: #9a7738;
+  --gold-strong: #6f4f22;
+  --gold-ghost: rgba(154, 119, 56, 0.12);
+  --text: #211b17;
+  --text-strong: #17120f;
+  --text-muted: #625a52;
+  --shadow-soft: rgba(62, 47, 29, 0.12);
+  color-scheme: light;
+}
+
+body[data-theme='light']::before {
+  background:
+    linear-gradient(rgba(86, 72, 46, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(86, 72, 46, 0.03) 1px, transparent 1px),
+    radial-gradient(circle at 50% 16%, rgba(154, 119, 56, 0.12), transparent 26%);
+  opacity: 0.7;
+}
+
+body[data-theme='light']::after {
+  background: radial-gradient(circle at 20% 20%, rgba(154, 119, 56, 0.16), transparent 28%);
 }
 
 * {
@@ -42,10 +77,11 @@ body {
   min-height: 100vh;
   background:
     radial-gradient(circle at top left, rgba(185, 154, 94, 0.08), transparent 35%),
-    linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-mid) 35%, #0d1010 100%);
+    linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-mid) 35%, var(--bg-soft) 100%);
   color: var(--text);
   position: relative;
   overflow-x: hidden;
+  transition: background 300ms ease, color 300ms ease;
 }
 
 body::before {
@@ -101,17 +137,17 @@ button {
 .profile-card {
   position: relative;
   width: min(1100px, calc(100vw - 36px));
-  background: var(--panel);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, var(--panel) 0%, var(--panel-strong) 100%);
+  border: 1px solid var(--card-border);
   border-radius: 20px;
-  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 25px 80px var(--shadow-soft);
   padding: 28px 34px 20px;
   overflow: hidden;
-  transition: box-shadow 250ms ease-out, border-color 250ms ease-out, transform 250ms ease-out;
+  transition: box-shadow 250ms ease-out, border-color 250ms ease-out, transform 250ms ease-out, background 300ms ease;
 }
 
 .profile-card:hover {
-  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.2);
   border-color: rgba(185, 154, 94, 0.2);
 }
 
@@ -125,6 +161,34 @@ button {
   pointer-events: none;
   opacity: 0;
   animation: cardReveal 800ms ease-out 200ms both;
+}
+
+body[data-theme='light'] .profile-card {
+  box-shadow: 0 22px 70px rgba(76, 56, 27, 0.12);
+}
+
+body[data-theme='light'] .profile-card:hover {
+  box-shadow: 0 26px 82px rgba(76, 56, 27, 0.16);
+}
+
+body[data-theme='light'] .profile-card::before {
+  background:
+    linear-gradient(90deg, rgba(154, 119, 56, 0.06), transparent 18%, transparent 82%, rgba(154, 119, 56, 0.06)),
+    radial-gradient(circle at 20% 10%, rgba(154, 119, 56, 0.08), transparent 25%);
+}
+
+body[data-theme='light'] .brand-mark,
+body[data-theme='light'] .row-value,
+body[data-theme='light'] .company-name,
+body[data-theme='light'] .footer-brand {
+  color: var(--text-strong);
+}
+
+body[data-theme='light'] .brand-location,
+body[data-theme='light'] .row-label,
+body[data-theme='light'] .footer-location,
+body[data-theme='light'] .designation {
+  color: var(--gold-strong);
 }
 
 .executive-header,
@@ -147,6 +211,12 @@ button {
   animation: fadeInUp 500ms var(--ease-premium) 200ms both;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .brand-mark {
   font-size: clamp(0.9rem, 1vw, 1.1rem);
   letter-spacing: 0.18em;
@@ -159,6 +229,44 @@ button {
   letter-spacing: 0.2em;
   color: var(--text-muted);
   text-transform: uppercase;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid var(--card-border);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: transform 220ms var(--ease-premium), border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(185, 154, 94, 0.4);
+  background: var(--gold-ghost);
+  box-shadow: 0 10px 24px rgba(185, 154, 94, 0.08);
+}
+
+.theme-toggle:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.theme-toggle svg {
+  transition: transform 260ms var(--ease-premium);
+}
+
+.theme-toggle:hover svg,
+.theme-toggle:focus-visible svg {
+  transform: rotate(18deg) scale(1.08);
 }
 
 .executive-profile {
@@ -182,12 +290,22 @@ button {
   opacity: 0;
   transform: translateY(20px) scale(0.98);
   animation: portraitReveal 900ms var(--ease-premium) 350ms both;
-  transition: transform 500ms ease-out, box-shadow 250ms ease-out;
+  transition: transform 500ms ease-out, box-shadow 250ms ease-out, border-color 250ms ease-out, background 300ms ease;
 }
 
 .portrait-panel:hover {
   transform: translateY(-2px);
   box-shadow: 0 20px 44px rgba(0, 0, 0, 0.25);
+}
+
+body[data-theme='light'] .portrait-panel {
+  border-color: rgba(154, 119, 56, 0.23);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.7), rgba(240, 232, 218, 0.9));
+  box-shadow: 0 18px 40px rgba(76, 56, 27, 0.12);
+}
+
+body[data-theme='light'] .portrait-panel:hover {
+  box-shadow: 0 20px 46px rgba(76, 56, 27, 0.16);
 }
 
 .portrait-image {
@@ -249,6 +367,10 @@ button {
   background: rgba(185, 154, 94, 0.38);
 }
 
+body[data-theme='light'] .profile-copy::before {
+  background: rgba(154, 119, 56, 0.28);
+}
+
 .eyebrow {
   display: inline-flex;
   align-items: center;
@@ -308,8 +430,8 @@ h1 {
 
 .contact-panel {
   margin-top: 22px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
   opacity: 0;
   animation: contactPanelReveal 450ms ease-out 1250ms both;
 }
@@ -320,7 +442,7 @@ h1 {
   gap: 16px;
   width: 100%;
   padding: 18px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--line-soft);
   color: inherit;
   text-decoration: none;
   opacity: 0;
@@ -329,7 +451,8 @@ h1 {
     transform 250ms ease-out,
     border-color 250ms ease-out,
     background-color 250ms ease-out,
-    opacity 250ms ease-out;
+    opacity 250ms ease-out,
+    box-shadow 250ms ease-out;
   animation: contactReveal 450ms var(--ease-premium) both;
   -webkit-tap-highlight-color: transparent;
 }
@@ -348,6 +471,14 @@ h1 {
 .contact-row:focus-visible {
   transform: translateX(4px);
   border-color: rgba(185, 154, 94, 0.26);
+  background: linear-gradient(90deg, rgba(185, 154, 94, 0.04), transparent 45%);
+  box-shadow: inset 0 0 0 1px rgba(185, 154, 94, 0.06);
+}
+
+body[data-theme='light'] .contact-row:hover,
+body[data-theme='light'] .contact-row:focus-visible {
+  background: linear-gradient(90deg, rgba(154, 119, 56, 0.07), transparent 45%);
+  box-shadow: inset 0 0 0 1px rgba(154, 119, 56, 0.08);
 }
 
 .contact-row:active {
@@ -425,10 +556,134 @@ h1 {
   margin-top: 12px;
   padding-top: 14px;
   color: var(--gold);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--line-soft);
   opacity: 0;
   transform: translateY(8px);
   animation: footerReveal 450ms var(--ease-premium) 1470ms both;
+}
+
+.save-contact {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 168px;
+  min-height: 46px;
+  padding: 0.85rem 1.35rem;
+  border: 1px solid rgba(185, 154, 94, 0.35);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(185, 154, 94, 0.18), rgba(185, 154, 94, 0.04));
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.16);
+  color: var(--text);
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  isolation: isolate;
+  transform: translateY(0) scale(1);
+  opacity: 0;
+  animation: ctaReveal 500ms var(--ease-premium) 1500ms both;
+  transition:
+    transform 220ms var(--ease-premium),
+    box-shadow 220ms ease,
+    border-color 220ms ease,
+    background 220ms ease,
+    filter 220ms ease,
+    letter-spacing 220ms ease;
+}
+
+body[data-theme='light'] .save-contact {
+  color: var(--text-strong);
+  background: linear-gradient(135deg, rgba(154, 119, 56, 0.12), rgba(255, 255, 255, 0.42));
+  box-shadow: 0 12px 28px rgba(154, 119, 56, 0.12);
+}
+
+body[data-theme='light'] .save-contact:hover,
+body[data-theme='light'] .save-contact:focus-visible {
+  background: linear-gradient(135deg, rgba(154, 119, 56, 0.17), rgba(255, 255, 255, 0.46));
+  box-shadow: 0 18px 34px rgba(154, 119, 56, 0.14), 0 0 22px rgba(154, 119, 56, 0.07);
+}
+
+.save-contact::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.24) 46%, transparent 100%);
+  transform: translateX(-120%);
+  transition: transform 620ms var(--ease-premium);
+  z-index: -1;
+}
+
+.save-contact::after {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border: 1px solid rgba(185, 154, 94, 0.2);
+  border-radius: inherit;
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity 260ms ease, transform 260ms var(--ease-premium);
+}
+
+.save-contact:hover,
+.save-contact:focus-visible {
+  transform: translateY(-2px) scale(1.02);
+  border-color: rgba(185, 154, 94, 0.62);
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.22), 0 0 20px rgba(185, 154, 94, 0.18);
+  background: linear-gradient(135deg, rgba(185, 154, 94, 0.24), rgba(185, 154, 94, 0.08));
+  letter-spacing: 0.065em;
+}
+
+.save-contact:hover::before,
+.save-contact:focus-visible::before {
+  transform: translateX(120%);
+}
+
+.save-contact:hover::after,
+.save-contact:focus-visible::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.save-contact:active {
+  transform: translateY(0) scale(0.985);
+}
+
+.save-contact span {
+  position: relative;
+  z-index: 1;
+  transition: transform 220ms var(--ease-premium);
+}
+
+.save-contact:hover span,
+.save-contact:focus-visible span {
+  transform: translateX(1px);
+}
+
+.save-contact svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 240ms var(--ease-premium), filter 240ms ease;
+}
+
+.save-contact:hover svg,
+.save-contact:focus-visible svg {
+  transform: rotate(8deg) translateY(-1px) scale(1.08);
+  filter: drop-shadow(0 0 10px rgba(215, 192, 141, 0.8));
+}
+
+.save-contact.is-saved {
+  border-color: rgba(118, 201, 137, 0.75);
+  background: linear-gradient(135deg, rgba(118, 201, 137, 0.18), rgba(118, 201, 137, 0.06));
+  animation: savePulse 700ms var(--ease-premium);
+}
+
+.save-contact.is-saved::after {
+  opacity: 1;
+  border-color: rgba(118, 201, 137, 0.42);
+}
+
+.save-contact.is-saved svg {
+  transform: scale(1.08);
 }
 
 .footer-line {
@@ -617,6 +872,31 @@ h1 {
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes savePulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.16);
+  }
+  40% {
+    transform: scale(1.04);
+    box-shadow: 0 18px 34px rgba(118, 201, 137, 0.18);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.16);
+  }
+}
+
+@keyframes glowPulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 rgba(185, 154, 94, 0);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(185, 154, 94, 0.16);
   }
 }
 

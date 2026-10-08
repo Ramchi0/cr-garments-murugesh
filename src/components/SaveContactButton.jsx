@@ -1,4 +1,5 @@
 import { Download } from 'lucide-react';
+import { useState } from 'react';
 import profile from '../data/profile.js';
 
 const mobileNumber = profile.mobile.replace(/\D/g, '');
@@ -18,6 +19,8 @@ ADR;TYPE=WORK:;;;${profile.location};;;
 END:VCARD`;
 
 export function SaveContactButton() {
+  const [isSaved, setIsSaved] = useState(false);
+
   const handleDownload = () => {
     const blob = new Blob([vCard], { type: 'text/vcard;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -28,12 +31,20 @@ export function SaveContactButton() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+
+    setIsSaved(true);
+    window.setTimeout(() => setIsSaved(false), 1100);
   };
 
   return (
-    <button type="button" className="save-contact" onClick={handleDownload}>
+    <button
+      type="button"
+      className={`save-contact${isSaved ? ' is-saved' : ''}`}
+      onClick={handleDownload}
+      aria-label="Save contact as vCard"
+    >
       <Download size={16} strokeWidth={2} />
-      <span>Save Contact</span>
+      <span>{isSaved ? 'Saved' : 'Save Contact'}</span>
     </button>
   );
 }
