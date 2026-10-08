@@ -10,8 +10,8 @@ export function CEOProfilePage() {
       <div className="profile-card">
         <ExecutiveHeader />
         <CEOProfile />
-        <ContactList />
         <SaveContactButton />
+        <ContactList />
         <Footer />
       </div>
     </main>
