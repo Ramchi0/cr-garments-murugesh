@@ -564,13 +564,16 @@ body[data-theme='light'] .contact-row:focus-visible {
 
 .save-contact {
   position: relative;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+  width: fit-content;
+  max-width: 100%;
   min-width: 168px;
-  min-height: 46px;
-  padding: 0.85rem 1.35rem;
+  min-height: 48px;
+  margin: 18px auto 0;
+  padding: 0 1.15rem;
   border: 1px solid rgba(185, 154, 94, 0.35);
   border-radius: 999px;
   background: linear-gradient(135deg, rgba(185, 154, 94, 0.18), rgba(185, 154, 94, 0.04));
@@ -581,6 +584,8 @@ body[data-theme='light'] .contact-row:focus-visible {
   isolation: isolate;
   transform: translateY(0) scale(1);
   opacity: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
   animation: ctaReveal 500ms var(--ease-premium) 1500ms both;
   transition:
     transform 220ms var(--ease-premium),
@@ -672,6 +677,7 @@ body[data-theme='light'] .save-contact:focus-visible {
 }
 
 .save-contact.is-saved {
+  opacity: 1;
   border-color: rgba(118, 201, 137, 0.75);
   background: linear-gradient(135deg, rgba(118, 201, 137, 0.18), rgba(118, 201, 137, 0.06));
   animation: savePulse 700ms var(--ease-premium);
@@ -978,6 +984,14 @@ body[data-theme='light'] .save-contact:focus-visible {
   .contact-row {
     gap: 12px;
     padding: 16px 0;
+  }
+
+  .save-contact {
+    width: 100%;
+    max-width: 280px;
+    min-width: 0;
+    min-height: 48px;
+    margin-top: 16px;
   }
 
   .row-label {
