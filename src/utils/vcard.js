@@ -30,23 +30,24 @@ function toVcfFilename(profile) {
 
 export function generateVCard(profile) {
   const mobile = toPhoneNumber(profile.mobile);
-  const whatsapp = toPhoneNumber(profile.whatsapp || profile.mobile);
+  const whatsapp = toPhoneNumber(profile.whatsapp);
   const website = toWebsiteUrl(profile.website);
 
   return [
     'BEGIN:VCARD',
     'VERSION:3.0',
+    `N:${profile.name};;;;`,
     `FN:${profile.name}`,
     `ORG:${profile.company}`,
     `TITLE:${profile.designation}`,
-    `TEL;TYPE=CELL:${mobile}`,
-    `TEL;TYPE=WORK:${mobile}`,
-    `EMAIL:${profile.email}`,
-    `URL:${website}`,
-    `ADR;TYPE=WORK:;;;${profile.location};;;`,
-    `NOTE:WhatsApp: ${whatsapp}`,
+    `TEL;TYPE=CELL,VOICE:${mobile}`,
+    `item1.TEL:${whatsapp}`,
+    'item1.X-ABLabel:WhatsApp',
+    `EMAIL;TYPE=INTERNET:${profile.email}`,
+    `URL;TYPE=WORK:${website}`,
+    `ADR;TYPE=WORK:;;${profile.location};;;;`,
     'END:VCARD',
-  ].join('\n');
+  ].join('\r\n') + '\r\n';
 }
 
 export function downloadVCard(profile) {
