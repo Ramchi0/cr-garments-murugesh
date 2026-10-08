@@ -17,7 +17,7 @@ function toWebsiteUrl(value) {
 }
 
 function toVcfFilename(profile) {
-  const parts = [profile.name, profile.company]
+  const parts = [profile.contactName || profile.name, profile.company]
     .map((value) => String(value ?? '').trim())
     .filter(Boolean)
     .map((value) => value.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, ''))
@@ -28,30 +28,65 @@ function toVcfFilename(profile) {
   return `${slug}.vcf`;
 }
 
-export function generateVCard(profile) {
+function detectContactPlatform() {
+  const userAgent = globalThis.navigator?.userAgent ?? '';
+  const platform = globalThis.navigator?.platform ?? '';
+  const maxTouchPoints = globalThis.navigator?.maxTouchPoints ?? 0;
+  const isIOS =
+    /iPad|iPhone|iPod/i.test(userAgent) ||
+    (platform === 'MacIntel' && maxTouchPoints > 1);
+
+  if (isIOS) {
+    return 'ios';
+  }
+  if (/Android/i.test(userAgent)) {
+    return 'android';
+  }
+
+  return 'other';
+}
+
+export function generateContactVCard(profile, platform = detectContactPlatform()) {
   const mobile = toPhoneNumber(profile.mobile);
   const whatsapp = toPhoneNumber(profile.whatsapp);
   const website = toWebsiteUrl(profile.website);
+  const contactName = profile.contactName || profile.name;
 
-  return [
+  const fields = [
     'BEGIN:VCARD',
     'VERSION:3.0',
-    `N:${profile.name};;;;`,
-    `FN:${profile.name}`,
+    `N:${contactName};;;;`,
+    `FN:${contactName}`,
     `ORG:${profile.company}`,
     `TITLE:${profile.designation}`,
     `TEL;TYPE=CELL,VOICE:${mobile}`,
-    `item1.TEL:${whatsapp}`,
-    'item1.X-ABLabel:WhatsApp',
+  ];
+
+  if (platform === 'ios') {
+    fields.push(
+      `item1.TEL:${whatsapp}`,
+      'item1.X-ABLabel:WhatsApp',
+    );
+  } else {
+    fields.push(`TEL;TYPE=WHATSAPP:${whatsapp}`);
+  }
+
+  fields.push(
     `EMAIL;TYPE=INTERNET:${profile.email}`,
     `URL;TYPE=WORK:${website}`,
     `ADR;TYPE=WORK:;;${profile.location};;;;`,
     'END:VCARD',
-  ].join('\r\n') + '\r\n';
+  );
+
+  return fields.join('\r\n') + '\r\n';
+}
+
+export function generateVCard(profile) {
+  return generateContactVCard(profile);
 }
 
 export function downloadVCard(profile) {
-  const vCard = generateVCard(profile);
+  const vCard = generateContactVCard(profile);
   const blob = new Blob([vCard], { type: 'text/vcard;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');

@@ -1,5 +1,6 @@
 const profile = {
   name: 'Murugesh',
+  contactName: 'V Murugesh',
   designation: 'CEO',
   company: 'C.R. Garments',
   location: 'India',
