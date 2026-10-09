@@ -82,11 +82,6 @@ export function detectContactPlatform() {
   return 'other';
 }
 
-export function isIOSInAppBrowser() {
-  const userAgent = globalThis.navigator?.userAgent ?? '';
-  return /FBAN|FBAV|FB_IAB|Instagram|LinkedInApp|Twitter|MicroMessenger|Line\/|TikTok|Snapchat|WhatsApp|Outlook-iOS|Gmail|Pinterest|Reddit|Discord/i.test(userAgent);
-}
-
 export function generateContactVCard(profile, platform = detectContactPlatform()) {
   const fullName = getValues(profile.contactName || profile.name)[0] ?? '';
   const nameParts = fullName.split(/\s+/).filter(Boolean);
