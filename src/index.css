@@ -579,7 +579,9 @@ body[data-theme='light'] .contact-row:focus-visible {
   background: linear-gradient(135deg, rgba(185, 154, 94, 0.18), rgba(185, 154, 94, 0.04));
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.16);
   color: var(--text);
+  font: inherit;
   letter-spacing: 0.04em;
+  text-decoration: none;
   overflow: hidden;
   isolation: isolate;
   transform: translateY(0) scale(1);

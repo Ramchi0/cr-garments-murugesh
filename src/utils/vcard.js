@@ -54,16 +54,6 @@ function toWebsiteUrl(value) {
   return `https://www.${stringValue.replace(/^www\./i, '')}`;
 }
 
-function toVcfFilename(profile) {
-  const parts = [profile.contactName || profile.name, profile.company]
-    .map((value) => String(value ?? '').trim())
-    .filter(Boolean)
-    .map((value) => value.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, ''))
-    .filter(Boolean);
-
-  return `${parts.length ? parts.join('-') : 'contact'}.vcf`;
-}
-
 export function detectContactPlatform() {
   const userAgent = globalThis.navigator?.userAgent ?? '';
   const platform = globalThis.navigator?.platform ?? '';
@@ -147,22 +137,4 @@ export function generateContactVCard(profile, platform = detectContactPlatform()
 
 export function generateVCard(profile) {
   return generateContactVCard(profile);
-}
-
-export function downloadVCard(profile, platform = detectContactPlatform()) {
-  const vCard = generateContactVCard(profile, platform);
-  const blob = new Blob([vCard], { type: 'text/vcard;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-
-  link.href = url;
-  if (platform !== 'ios') {
-    link.download = toVcfFilename(profile);
-  }
-  link.hidden = true;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-
-  window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
 }
